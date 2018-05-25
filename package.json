@@ -1,7 +1,7 @@
 {
-  "name": "project-webpack",
+  "name": "rock-blaster",
   "version": "1.0.0",
-  "description": "* This is a project skeleton for developing in ES6 with Webpack * To setup, run npm install and start coding! * Additional guide included if you are interested on the steps I followed to setup the environmnet for the seed project",
+  "description": "Classic arcade revival in HTML5 + TypeScript ",
   "main": "webpack.config.js",
   "babel": {
     "presets": [
@@ -14,14 +14,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jdiejim/Seed-project-webpack.git"
+    "url": "https://github.com/YouriAckx/rockblaster.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/jdiejim/Seed-project-webpack/issues"
+    "url": "https://github.com/YouriAckx/rockblaster/issues"
   },
-  "homepage": "https://github.com/jdiejim/Seed-project-webpack#readme",
+  "homepage": "https://github.com/YouriAckx/rockblaster#readme",
   "devDependencies": {
     "babel-core": "^6.24.1",
     "babel-loader": "^7.0.0",
