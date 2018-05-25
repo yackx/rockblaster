@@ -1,0 +1,28 @@
+body {
+  background: #333;
+}
+
+#wrapper {
+  position: relative;
+  width: 800px;
+  height: 600px;
+  margin: 0 auto;
+  background: black;
+}
+
+#wrapper canvas {
+  position: absolute;
+  top: 0;
+  display: block;
+  margin: 0 auto;
+}
+
+#info {
+  text-align: center;
+  color: aliceblue;
+  font-family: "Courier New", monospace;
+  font-size: small;
+  margin: 10px auto;
+  display: block;
+  width: 800px;
+}
