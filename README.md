@@ -26,6 +26,7 @@ Build the project in the `build` directory:
 
 * Keyboard required (you cannot play on a tablet)
 * No sound on Safari
+* Security vulnerability warning on `hoek`. No fix from `node-sass` yet.
 
 ## Credits
 
