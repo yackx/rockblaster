@@ -22,7 +22,7 @@ Run the following command:
 
 Launch with hot reload thanks to `webpack-dev-server`:
 
-`$ npm run start`
+`$ npm start`
 
 ## Build
 
