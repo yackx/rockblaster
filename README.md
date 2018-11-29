@@ -10,6 +10,14 @@ The project uses Webpack 4.
 
 `$ npm install`
 
+If you get the following error:
+
+`npm ERR! Invalid package name "@babel-core": name can only contain URL-friendly characters`
+
+Run the following command:
+
+`$ npm -i @babel/core`
+
 ## Run
 
 Launch with hot reload thanks to `webpack-dev-server`:
