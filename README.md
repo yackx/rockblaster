@@ -25,6 +25,7 @@ Build the project in the `build` directory:
 
 ## Known limitations and issues
 
+* Game only works at the correct speed on **60Hz** screen.
 * Keyboard required (you cannot play on a tablet)
 * No sound on Safari
 
