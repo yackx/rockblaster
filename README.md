@@ -6,39 +6,30 @@
 
 ## Install
 
-The project uses Webpack 4.
+- This project uses Webpack 4.
+- You may replace the `yarn` commands with their `npm` equivalent should you prefer.
 
-`$ npm install`
-
-If you get the following error:
-
-`npm ERR! Invalid package name "@babel-core": name can only contain URL-friendly characters`
-
-Run the following command:
-
-`$ npm -i @babel/core`
+`$ yarn install`
 
 ## Run
 
 Launch with hot reload thanks to `webpack-dev-server`:
 
-`$ npm start`
+`$ yarn start`
 
 ## Build
 
 Build the project in the `build` directory:
 
-`$ npm run-script build`
+`$ yarn build`
 
 ## Known limitations and issues
 
 * Keyboard required (you cannot play on a tablet)
 * No sound on Safari
-* Security vulnerability warning on `hoek`. No fix from `node-sass` yet.
 
 ## Credits
 
 * Original game largely inspired from
 [Asteroid Deluxe](https://www.arcade-history.com/?n=asteroids-deluxe&page=detail&id=127)
-* Sounds downloaded from [classicgaming.cc](http://www.classicgaming.cc/classics/asteroids/sounds)
- 
+* Sounds downloaded from [classicgaming.cc](http://www.classicgaming.cc/classics/asteroids/sounds) 
