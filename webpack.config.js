@@ -3,6 +3,7 @@ const file = require('file-loader');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
+  target: "web",
   context: path.join(__dirname, 'src'),
   entry: {
     app: './index.js'
@@ -62,8 +63,10 @@ module.exports = {
     extensions: [ '.tsx', '.ts', '.js' ]
   },
   devServer: {
-    contentBase: path.join(__dirname, 'build'),
-    inline: true,
-    stats: 'errors-only'
+    allowedHosts: 'all',
+    static: {
+      directory: path.join(__dirname, 'build')
+    },
+    hot: true
   }
 }
