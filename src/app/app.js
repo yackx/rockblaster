@@ -11,9 +11,7 @@ window.onload = function() {
     console.log("window.onload");
     const fgContext = getCanvasContext('foreground');
     const bgContext = getCanvasContext('background');
-
     game = new Game(fgContext, bgContext);
-
     animate();
 };
 
