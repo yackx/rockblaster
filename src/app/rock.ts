@@ -2,11 +2,12 @@ import Pair from "./pair";
 import Drawable from "./drawable";
 import Trigonometry from './trigonometry';
 import Circle from "./collision/circle";
+import Settings from "./settings";
 
 class Rock extends Drawable {
-    private static readonly TRAVEL_PIXELS_PER_FRAME = 1;
-    private static readonly SPIN_RADS_PER_FRAME = 0.01;
-    private static readonly SCALE_FACTORS = [ 0.25, 0.5, 1.0 ];
+    private static readonly TRAVEL_PIXELS_FACTOR = Settings.SPEED_FACTOR / 8;
+    private static readonly SPIN_RADS_FACTOR = Settings.SPEED_FACTOR * 0.01 / 8;
+    private static readonly SCALE_FACTORS = [0.25, 0.5, 1.0];
     private static readonly ROCK_SPEED_FACTORS = [1.0, 1.5, 2.0, 2.5];
     private static readonly ROCK_SPIN_FACTORS = [1.0, 2.5, 5.0, 10.0];
 
@@ -105,14 +106,14 @@ class Rock extends Drawable {
      * Let the rock travel based on its direction (angle) and speed.
      * This method also spins the rock.
      */
-    travel() {
+    animate(delta: number) {
         const offset = 30;      // how many pixels outside the frame before wrapping
 
         const width = this.ctx.canvas.clientWidth;
         const height = this.ctx.canvas.clientHeight;
 
         // Calculate displacement. Position and wrap if necessary
-        const displacement = Rock.TRAVEL_PIXELS_PER_FRAME * Rock.ROCK_SPEED_FACTORS[this.speedFactorIndex];
+        const displacement = delta * Rock.TRAVEL_PIXELS_FACTOR * Rock.ROCK_SPEED_FACTORS[this.speedFactorIndex];
 
         let x = this.position.x + Math.sin(this._angle) * displacement;
         if (x > width + offset) x = -offset;
@@ -125,7 +126,7 @@ class Rock extends Drawable {
         this.position = new Pair(x, y);
 
         // Spin
-        this.spin += (Rock.SPIN_RADS_PER_FRAME * Rock.ROCK_SPIN_FACTORS[this.spinFactorIndex]) % (2*Math.PI);
+        this.spin += (delta * Rock.SPIN_RADS_FACTOR * Rock.ROCK_SPIN_FACTORS[this.spinFactorIndex]) % (2*Math.PI);
     }
 
     /** Return a fine-grained representation of this rock as a circle, for collision detection. */

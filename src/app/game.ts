@@ -27,15 +27,17 @@ class Game extends Drawable {
     private score: number = 0;
     private hiScore: number = 0;
 
-    private currentFrame = 0;
-    private startingLevelFrame = 0;
-    private lastBulletFireFrame = 0;
-    private gameOverFrame = 0;
-    private shipCollisionFrame = 0;
-
     private fireSound: Sound = new Sound('/sounds/fire.wav');
     private thrustSound: Sound = new Sound('/sounds/thrust.wav');
     private bangLargeSound: Sound = new Sound('/sounds/bang-large.wav');
+
+    private delta = 0;
+    private timestamp = 0;
+
+    private startingLevelWaitTime = 0;
+    private shipCollisionDuration = 0;
+    private lastBulletFireWait = 0;
+    private gameOverWaitTime = 0;
 
     constructor(fgCtx: CanvasRenderingContext2D, readonly bgCtx: CanvasRenderingContext2D) {
         super(fgCtx);
@@ -43,9 +45,11 @@ class Game extends Drawable {
         this.drawBackground();
     }
 
-    // noinspection JSUnusedGlobalSymbols called from app.ts
     /** Execute the game next frame logic according the current state. */
-    next() {
+    animate(timestamp: number) {
+        this.delta = timestamp - this.timestamp;
+        this.timestamp = timestamp;
+
         switch (this.state) {
             case State.StartingLevel:
                 this.nextLevelStarting(); break;
@@ -62,11 +66,14 @@ class Game extends Drawable {
 
     /** Perform the game logic when the level is about to start. */
     nextLevelStarting() {
-        const waitFrames = this.currentFrame - this.startingLevelFrame;
-        if (waitFrames > 3 * 60) {
+        this.startingLevelWaitTime += this.delta;
+        if (this.startingLevelWaitTime > 3 * 1000) {
             console.log("start level");
+            this.startingLevelWaitTime = 0;
             this.rocks = [];
-            for (let i = 0; i < 8; i++) this.rocks.push(Rock.buildRandom(this.ctx));
+            for (let i = 0; i < 8; i++) {
+                this.rocks.push(Rock.buildRandom(this.ctx));
+            }
             this.state = State.Playing;
         }
 
@@ -81,22 +88,24 @@ class Game extends Drawable {
         if (this.rocks.length == 0) {
             console.log("level cleared");
             this.state = State.StartingLevel;
-            this.startingLevelFrame = this.currentFrame;
         }
     }
 
     /**
      * Perform game logic when the ship is destroyed.
-     * The ship disintegrates during a few seconds. Rocks still move around.
+     *
+     * The ship disintegrates during a few seconds.
+     * Rocks still move around.
      */
     private nextDestroyed() {
         this.playable();
 
-        if (this.shipCollisionFrame + 4 * 60 < this.currentFrame) {
+        this.shipCollisionDuration += this.delta;
+        if (this.shipCollisionDuration > 4 * 1000) {
+            this.shipCollisionDuration = 0;
             // Game over?
             if (this.lives < 1) {
                 this.state = State.GameOver;
-                this.gameOverFrame = this.currentFrame;
                 if (this.score > this.hiScore) {
                     this.hiScore = this.score;
                 }
@@ -110,7 +119,6 @@ class Game extends Drawable {
                 const rockCircle = rock.asCircle();
                 if (Collision.circlesOverlap(safeCircle, rockCircle)) {
                     // There are rocks close to the spawning spot. Delay respawn
-                    this.startingLevelFrame++;
                     return;
                 }
             }
@@ -128,12 +136,15 @@ class Game extends Drawable {
     private nextGameOver() {
         this.playable();
 
+        this.gameOverWaitTime += this.delta;
+
         // Stay on the Game Over screen
-        if (this.gameOverFrame + 8 * 60 > this.currentFrame) {
+        if (this.gameOverWaitTime < 8 * 1000) {
             return;
         }
+        this.gameOverWaitTime = 0;
 
-        // Enough, let's play again. Reset score and ships
+        // Enough wait, let's play again. Reset score and ships
         this.lives = Game.NUMBER_OF_LIVES;
         this.score = 0;
         this.ship.setDestroy(false);
@@ -143,8 +154,9 @@ class Game extends Drawable {
     }
 
     /**
-     * Common logic when the level is starting (no rocks yet)
-     * and when the game is being played. React to control input
+     * Common logic when the level is starting (no rocks yet) and when the game is being played.
+     *
+     * React to control input
      */
     private playable() {
         // Rotate and accelerate ship
@@ -152,33 +164,34 @@ class Game extends Drawable {
             if (this.keyboard.isKeyPressed('ArrowLeft')) this.ship.rotateLeft();
             if (this.keyboard.isKeyPressed('ArrowRight')) this.ship.rotateRight();
             if (this.keyboard.isKeyPressed('ArrowUp')) {
-                this.ship.accelerate();
+                this.ship.accelerate(this.delta);
                 this.thrustSound.play();
             }
         }
         this.ship.travel();
 
         // Fire
+        this.lastBulletFireWait += this.delta;
         if (this.state == State.Playing && this.keyboard.isKeyPressed(' ')) {
-            if (this.lastBulletFireFrame + 20 <= this.currentFrame) {
+            if (this.lastBulletFireWait > 0.5 * 1000) {
+                this.lastBulletFireWait = 0;
                 const bullet = new Bullet(this.ctx, this.ship.firingHeadPosition(), this.ship.spin);
                 this.bullets.push(bullet);
-                this.lastBulletFireFrame = this.currentFrame;
                 this.fireSound.play();
             }
         }
 
         // Bullets travel
         for (let bullet of this.bullets) {
-            if (!bullet.travel()) {
-                // Will no longer travel
+            if (!bullet.travel(this.delta)) {
+                // Bullet will no longer travel
                 this.deleteBullet(bullet);
             }
         }
 
         // Rocks travel
         for (let rock of this.rocks) {
-            rock.travel();
+            rock.animate(this.delta);
         }
 
         // Bullet hits rock
@@ -221,7 +234,6 @@ class Game extends Drawable {
                 }
                 if (Collision.triangleCollidesCircle(shipTriangle, rockCircle)) {
                     this.state = State.Destroyed;
-                    this.shipCollisionFrame = this.currentFrame;
                     this.ship.setDestroy(true);
                     this.lives--;
                     this.drawBackground();
@@ -240,8 +252,6 @@ class Game extends Drawable {
     }
 
     draw() {
-        this.currentFrame++;
-
         // Can have an effect on anti-aliasing
         // this.ctx.translate(0.5, 0.5);
 

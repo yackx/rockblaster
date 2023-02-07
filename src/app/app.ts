@@ -7,13 +7,13 @@ window.onload = function() {
     const fgContext = getCanvasContext('foreground');
     const bgContext = getCanvasContext('background');
     game = new Game(fgContext, bgContext);
-    animate();
+    window.requestAnimationFrame(animate);
 };
 
-function animate() {
-    window.requestAnimationFrame(animate);
+function animate(timestamp: number) {
     game.draw();
-    game.next();
+    game.animate(timestamp);
+    window.requestAnimationFrame(animate);
 }
 
 function getCanvasContext(id: string) {

@@ -3,6 +3,7 @@ import Drawable from './drawable';
 import Trigonometry from './trigonometry';
 import Triangle from "./collision/triangle";
 import Circle from "./collision/circle";
+import Settings from "./settings";
 
 class Ship extends Drawable {
     private static readonly ROTATION_RATE = 0.07;   // in radians per frame
@@ -48,11 +49,13 @@ class Ship extends Drawable {
         this.spin = 0.0;
     }
 
-    accelerate() {
+    accelerate(delta: number) {
         // Adjust thrust vector.
         // If the ship is not moving, give it a kick.
-        // It helps with the round to 0 later
-        const thrustFactor = this.speed.equals(Pair.origin()) ? 0.15 : 0.1;
+        // It helps with the rounding to 0 later
+        const thrustBase = 0.1 / 8;
+        const kick = 1.5;
+        const thrustFactor = Settings.SPEED_FACTOR * delta * (this.speed.equals(Pair.origin()) ? thrustBase * kick : thrustBase);
 
         // Build a thrust vector based on ship spin
         const thrust = new Pair(Math.sin(this.spin) * thrustFactor, -Math.cos(this.spin) * thrustFactor);
@@ -61,7 +64,7 @@ class Ship extends Drawable {
         let newSpeed = thrust.add(this.speed);
 
         // Avoid very slow movement by rounding to zero
-        const min = 0.1;
+        const min = 0.1 * Settings.SPEED_FACTOR;
         // noinspection JSSuspiciousNameCombination complains x vs y
         if (Math.abs(newSpeed.x) < min && Math.abs(newSpeed.y) < min) {
             newSpeed = Pair.origin();
@@ -69,7 +72,7 @@ class Ship extends Drawable {
 
         // Speed limit
         const d = Trigonometry.distanceFromOrigin(newSpeed);
-        if (d <= 5.0) {
+        if (d <= 5.0 * Settings.SPEED_FACTOR) {
             this.speed = newSpeed;
         }
     }
