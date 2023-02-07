@@ -12,8 +12,6 @@
 $ npm install
 ```
 
-- You may replace the `npm` commands with their `yarn` equivalent should you prefer.
-
 ## Run
 
 Launch with hot reload:
