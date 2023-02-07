@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 	<head>
         <meta charset="utf-8"/>
-		<title><%= htmlWebpackPlugin.options.title %></title>
+		<title>Rock Blaster</title>
 	</head>
 	<body>
         <div id="wrapper">
@@ -14,5 +14,9 @@
         <div id="info">
             Use ︎⬅ ︎➡ ︎⬆ to control ship. ︎Space bar to fire.
         </div>
+        <audio id="audio" preload="auto">
+            <source src="/sounds/fire.wav">
+        </audio>
+        <script type="module" src="/src/main.ts"></script>
 	</body>
 </html>

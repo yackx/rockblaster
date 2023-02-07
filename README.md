@@ -6,22 +6,27 @@
 
 ## Install
 
-- This project uses Webpack 4.
-- You may replace the `yarn` commands with their `npm` equivalent should you prefer.
+- This project uses vite.js.
 
-`$ yarn install`
+```bash
+$ npm install
+```
+
+- You may replace the `npm` commands with their `yarn` equivalent should you prefer.
 
 ## Run
 
-Launch with hot reload thanks to `webpack-dev-server`:
+Launch with hot reload:
 
-`$ yarn start`
+```bash
+$ vite
+```
 
 ## Build
 
-Build the project in the `build` directory:
+Build the project:
 
-`$ yarn build`
+`$ vite build`
 
 ## Known limitations and issues
 

@@ -8,12 +8,14 @@ class Ship extends Drawable {
     private static readonly ROTATION_RATE = 0.07;   // in radians per frame
 
     position: Pair;                                 // center of the ship, at the middle of the A horizontal leg
-    spin: number;                                   // in radians. 0 means heading up
+    spin = 0;                                       // in radians. 0 = heading up
     speed: Pair;
-    collisionStartFrame: number;                    // frame where ship collision occurred
+    collisionStartFrame = 0;                        // frame where ship collision occurred
 
     constructor(ctx: CanvasRenderingContext2D) {
         super(ctx);
+        this.position = Pair.origin();
+        this.speed = Pair.origin();
         this.setDestroy(false);
         this.reset();
     }
@@ -36,7 +38,7 @@ class Ship extends Drawable {
         if (destroyed) {
             this.collisionStartFrame = 0;
         } else {
-            this.collisionStartFrame = null;
+            this.collisionStartFrame = NaN;
         }
     }
 
@@ -104,7 +106,7 @@ class Ship extends Drawable {
         // if the ship is destroyed, it fragments are rotated during an animation
         const destroyedRotation = this.isDestroyed() ?
             (this.collisionStartFrame * 0.02) % (2 * Math.PI) :
-            null;
+            NaN;
 
         // destroyed ship will progressively vanish
         const alpha = this.isDestroyed() ? 1.0 - this.collisionStartFrame * 0.005 : 1.0;
@@ -153,7 +155,7 @@ class Ship extends Drawable {
     }
 
     private isDestroyed() {
-        return this.collisionStartFrame != null;
+        return !isNaN(this.collisionStartFrame);
     }
 }
 

@@ -11,7 +11,7 @@ class Rock extends Drawable {
     private static readonly ROCK_SPIN_FACTORS = [1.0, 2.5, 5.0, 10.0];
 
     position: Pair;                             // center of the rock
-    private _angle: number;                     // direction (radians)
+    private _angle = 0;                         // direction (radians)
     private spin: number = 0.0;                 // spin (radians per frame)
     private readonly spinFactorIndex: number;   // spin amplification (lookup table for actual spin factor)
     private readonly speedFactorIndex: number;  // speed amplification (lookup table for actual speed factor)
@@ -82,10 +82,10 @@ class Rock extends Drawable {
     }
 
     /**
-     * Exploded this rock.
+     * Explode this rock.
      * @return {[Rock, Rock]} 2 resulting smaller rocks, or `null` if the rock is completely destroyed.
      */
-    explode() : [Rock, Rock] {
+    explode(): [Rock, Rock] | null {
         if (this.stage == 0) {
             return null;
         }

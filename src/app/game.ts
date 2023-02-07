@@ -27,15 +27,15 @@ class Game extends Drawable {
     private score: number = 0;
     private hiScore: number = 0;
 
-    private currentFrame: number = 0;
-    private startingLevelFrame: number = 0;
-    private lastBulletFireFrame: number = 0;
-    private gameOverFrame: number;
-    private shipCollisionFrame : number;
+    private currentFrame = 0;
+    private startingLevelFrame = 0;
+    private lastBulletFireFrame = 0;
+    private gameOverFrame = 0;
+    private shipCollisionFrame = 0;
 
-    private fireSound: Sound = new Sound('fire.wav');
-    private thrustSound: Sound = new Sound('thrust.wav');
-    private bangLargeSound: Sound = new Sound('bang-large.wav');
+    private fireSound: Sound = new Sound('/sounds/fire.wav');
+    private thrustSound: Sound = new Sound('/sounds/thrust.wav');
+    private bangLargeSound: Sound = new Sound('/sounds/bang-large.wav');
 
     constructor(fgCtx: CanvasRenderingContext2D, readonly bgCtx: CanvasRenderingContext2D) {
         super(fgCtx);
@@ -43,7 +43,7 @@ class Game extends Drawable {
         this.drawBackground();
     }
 
-    // noinspection JSUnusedGlobalSymbols called from app.js
+    // noinspection JSUnusedGlobalSymbols called from app.ts
     /** Execute the game next frame logic according the current state. */
     next() {
         switch (this.state) {
@@ -104,7 +104,7 @@ class Game extends Drawable {
                 return;
             }
 
-            // Check if it is safe to respawn, eg no rocks in vicinity
+            // Check if it is safe to respawn, e.g. no rocks in vicinity
             const safeCircle = new Circle(new Pair(this.getWidth() / 2, this.getHeight() / 2), 50);
             for (let rock of this.rocks) {
                 const rockCircle = rock.asCircle();
@@ -189,13 +189,15 @@ class Game extends Drawable {
                     const exploded = rock.explode();
                     this.deleteRock(rock);
                     if (exploded != null) {
-                        let [rock1, rock2] = rock.explode();
-                        this.rocks.push(rock1);
-                        this.rocks.push(rock2);
+                        const rockFragments = rock.explode();
+                        if (rockFragments != null) {
+                            this.rocks.push(rockFragments[0]);
+                            this.rocks.push(rockFragments[1]);
+                        }
                     }
                     this.score++;
                     this.drawBackground();
-                    new SoundBlaster('bang-small.wav').playOnce();
+                    new SoundBlaster('/sounds/bang-small.wav').playOnce();
                     break;
                 }
             }
