@@ -1,11 +1,13 @@
 import SoundHelper from './sound-helper';
 
+/**
+ * Sound player without overlap.
+ *
+ * The HTMLAudioElement is added to the DOM ony once, and can be re-used several times.
+ * This version has better performance than the SoundBlaster.
+ * However, there can be no overlapping playback (eg multiple rocks explosions)
+ */
 class Sound {
-
-    // The HTMLAudioElement is added to the DOM ony once, and can be re-used several times.
-    // This version has better performance than the SoundBlaster.
-    // However, there can be no overlapping playback. (eg ship thrust)
-
     private readonly sound: HTMLAudioElement;
 
     constructor(readonly src: string) {

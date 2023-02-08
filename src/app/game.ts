@@ -10,13 +10,13 @@ import Sound from './sound/sound';
 import SoundBlaster from "./sound/sound-blaster";
 
 enum State {
-    StartingLevel, Playing, Destroyed, GameOver
+    Intro, StartingLevel, Playing, Destroyed, GameOver
 }
 
 class Game extends Drawable {
     private static readonly NUMBER_OF_LIVES = 3;
 
-    private state: State = State.StartingLevel;
+    private state: State = State.Intro;
     private keyboard: Keyboard = new Keyboard();
 
     private ship: Ship = new Ship(this.ctx);
@@ -30,6 +30,7 @@ class Game extends Drawable {
     private fireSound: Sound = new Sound('/sounds/fire.wav');
     private thrustSound: Sound = new Sound('/sounds/thrust.wav');
     private bangLargeSound: Sound = new Sound('/sounds/bang-large.wav');
+    private bangSmallSound: SoundBlaster = new SoundBlaster('/sounds/bang-small.wav');
 
     private delta = 0;
     private timestamp = 0;
@@ -39,10 +40,26 @@ class Game extends Drawable {
     private lastBulletFireWait = 0;
     private gameOverWaitTime = 0;
 
+    private readonly clickCaptureEventListener: (event: PointerEvent) => void
+
     constructor(fgCtx: CanvasRenderingContext2D, readonly bgCtx: CanvasRenderingContext2D) {
-        super(fgCtx);
         console.log("new game");
+        super(fgCtx);
         this.drawBackground();
+
+        this.clickCaptureEventListener = (event: PointerEvent) => this.onStart(event);
+        document.addEventListener('pointerdown', this.clickCaptureEventListener);
+    }
+
+    private onStart(_event: PointerEvent) {
+        console.log("start clicked");
+        // Play a dummy sound in this user interaction to avoid browser permission issues
+        // (notably Safari)
+        // - sound is still broken on Safari though (lags)
+        const dummySound = new SoundBlaster('/sounds/thrust.wav');
+        dummySound.play();
+        this.state = State.StartingLevel;
+        document.removeEventListener('pointerdown', this.clickCaptureEventListener);
     }
 
     /** Execute the game next frame logic according the current state. */
@@ -51,6 +68,8 @@ class Game extends Drawable {
         this.timestamp = timestamp;
 
         switch (this.state) {
+            case State.Intro:
+                this.nextIntro(); break;
             case State.StartingLevel:
                 this.nextLevelStarting(); break;
             case State.Playing:
@@ -64,8 +83,13 @@ class Game extends Drawable {
         }
     }
 
+    private nextIntro() {
+        this.drawBackground();
+    }
+
     /** Perform the game logic when the level is about to start. */
     nextLevelStarting() {
+        this.drawBackground();
         this.startingLevelWaitTime += this.delta;
         if (this.startingLevelWaitTime > 3 * 1000) {
             console.log("start level");
@@ -210,7 +234,7 @@ class Game extends Drawable {
                     }
                     this.score++;
                     this.drawBackground();
-                    new SoundBlaster('/sounds/bang-small.wav').playOnce();
+                    this.bangSmallSound.play();
                     break;
                 }
             }
@@ -261,7 +285,9 @@ class Game extends Drawable {
 
         this.clear(this.ctx);
 
-        this.ship.draw();
+        if (this.state != State.Intro) {
+            this.ship.draw();
+        }
 
         for (let bullet of this.bullets) {
             bullet.draw();
@@ -289,12 +315,19 @@ class Game extends Drawable {
         this.bgCtx.fillText('SCORE: ' + this.score, this.ctx.canvas.clientWidth - 10, 25);
         this.bgCtx.fillText('HI: ' + this.hiScore, this.ctx.canvas.clientWidth - 10, 40);
 
-        // Game over
-        if (this.state == State.GameOver) {
+        let text: string | undefined = undefined;
+        switch (this.state) {
+            case State.Intro:
+                text = 'Click to start';
+                break;
+            case State.GameOver:
+                text = 'GAME OVER';
+        }
+        if (text !== undefined) {
             this.bgCtx.font = '20px Courier New';
             this.bgCtx.textAlign = 'center';
             this.bgCtx.textBaseline = 'middle';
-            this.bgCtx.fillText('GAME OVER', this.ctx.canvas.clientWidth / 2, this.ctx.canvas.clientHeight / 2);
+            this.bgCtx.fillText(text, this.ctx.canvas.clientWidth / 2, this.ctx.canvas.clientHeight / 2);
         }
     }
 
