@@ -5,7 +5,7 @@ import Pair from "./pair";
  */
 class Trigonometry {
     private constructor() {
-        //
+        // empty
     }
 
     static toRadians(degrees: number) : number {

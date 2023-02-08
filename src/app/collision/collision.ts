@@ -5,8 +5,10 @@ import Trigonometry from '../trigonometry';
 import Triangle from "./triangle";
 
 class Collision {
+
+    // noinspection JSUnusedLocalSymbols
     private constructor() {
-        //
+        // not meant to be instantiated
     }
 
     static rectCollidesPoint(r: Rectangle, p: Pair) : boolean {

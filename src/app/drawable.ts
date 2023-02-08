@@ -2,10 +2,9 @@
  * Drawable element.
  */
 class Drawable {
-    ctx: CanvasRenderingContext2D;
 
-    constructor(ctx: CanvasRenderingContext2D) {
-        this.ctx = ctx;
+    constructor(protected readonly ctx: CanvasRenderingContext2D) {
+        // empty
     }
 
     /**

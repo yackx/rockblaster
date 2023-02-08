@@ -11,21 +11,26 @@ class Rock extends Drawable {
     private static readonly ROCK_SPEED_FACTORS = [1.0, 1.5, 2.0, 2.5];
     private static readonly ROCK_SPIN_FACTORS = [1.0, 2.5, 5.0, 10.0];
 
-    position: Pair;                             // center of the rock
     private _angle = 0;                         // direction (radians)
     private spin: number = 0.0;                 // spin (radians per frame)
-    private readonly spinFactorIndex: number;   // spin amplification (lookup table for actual spin factor)
-    private readonly speedFactorIndex: number;  // speed amplification (lookup table for actual speed factor)
-    private readonly stage: number;             // 2, 1 or 0
 
+    /**
+     * Create a new rock.
+     * @param ctx 2D context
+     * @param position Center of the rock
+     * @param angle Initial rotation (radians)
+     * @param spinFactorIndex Index into the spin lookup table
+     * @param speedFactorIndex Index into the speed lookup table
+     * @param stage Decay stage
+     */
     constructor(ctx: CanvasRenderingContext2D,
-                position: Pair, angle: number, spinFactorIndex: number, speedFactorIndex: number, stage: number) {
+                public position: Pair, // center of the rock
+                angle: number,
+                private readonly spinFactorIndex: number,
+                private readonly speedFactorIndex: number,
+                private readonly stage: number) {
         super(ctx);
-        this.position = position;
         this.angle = angle;
-        this.spinFactorIndex = spinFactorIndex;
-        this.speedFactorIndex = speedFactorIndex;
-        this.stage = stage;
     }
 
     static buildRandom(ctx: CanvasRenderingContext2D) : Rock {

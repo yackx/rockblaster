@@ -6,15 +6,10 @@ class Bullet extends Drawable {
     private static readonly TIME_TO_LIVE = 0.6 * 1000 / Settings.SPEED_FACTOR;
     private static readonly TRAVEL_FACTOR = 0.5 * Settings.SPEED_FACTOR;
 
-    position: Pair;
-
-    private readonly angle: number; // radians
     private timeToLive = Bullet.TIME_TO_LIVE;
 
-    constructor(ctx: CanvasRenderingContext2D, position: Pair, angle: number) {
+    constructor(ctx: CanvasRenderingContext2D, public position: Pair, private readonly angle: number) {
         super(ctx);
-        this.position = position;
-        this.angle = angle;
     }
 
     /**

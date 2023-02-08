@@ -1,12 +1,8 @@
 class Pair {
-    x: number;
-    y: number;
-
     private static ORIGIN = new Pair(0, 0);
 
-    constructor(x: number, y: number) {
-        this.x = x;
-        this.y = y;
+    constructor(public x: number, public y: number) {
+        // empty
     }
 
     static origin() {
