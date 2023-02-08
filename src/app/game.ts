@@ -28,7 +28,7 @@ class Game extends Drawable {
     private hiScore: number = 0;
 
     private fireSound: Sound = new Sound('/sounds/fire.wav');
-    private thrustSound: Sound = new Sound('/sounds/thrust.wav');
+    private thrustSound: Sound = new Sound('/sounds/thrust.wav', true);
     private bangLargeSound: Sound = new Sound('/sounds/bang-large.wav');
     private bangSmallSound: SoundBlaster = new SoundBlaster('/sounds/bang-small.wav');
 
@@ -193,7 +193,11 @@ class Game extends Drawable {
             }
             if (this.keyboard.isKeyPressed('ArrowUp')) {
                 this.ship.accelerate(this.delta);
-                this.thrustSound.play();
+                if (!this.thrustSound.isPlaying()) {
+                    this.thrustSound.play();
+                }
+            } else {
+                this.thrustSound.stop();
             }
         }
         this.ship.travel();

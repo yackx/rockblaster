@@ -10,7 +10,7 @@ import SoundHelper from './sound-helper';
 class Sound {
     private readonly sound: HTMLAudioElement;
 
-    constructor(readonly src: string) {
+    constructor(readonly src: string, readonly loop = false) {
         this.sound = SoundHelper.buildSoundElement(src);
         document.body.appendChild(this.sound);
     }
@@ -18,6 +18,15 @@ class Sound {
     play() {
         // noinspection JSIgnoredPromiseFromCall
         this.sound.play();
+    }
+
+    stop() {
+        this.sound.pause();
+        this.sound.currentTime = 0;
+    }
+
+    isPlaying(): boolean {
+        return !this.sound.paused;
     }
 }
 
