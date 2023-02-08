@@ -185,8 +185,12 @@ class Game extends Drawable {
     private playable() {
         // Rotate and accelerate ship
         if (this.state == State.Playing) {
-            if (this.keyboard.isKeyPressed('ArrowLeft')) this.ship.rotateLeft();
-            if (this.keyboard.isKeyPressed('ArrowRight')) this.ship.rotateRight();
+            if (this.keyboard.isKeyPressed('ArrowLeft')) {
+                this.ship.rotateLeft();
+            }
+            if (this.keyboard.isKeyPressed('ArrowRight')) {
+                this.ship.rotateRight();
+            }
             if (this.keyboard.isKeyPressed('ArrowUp')) {
                 this.ship.accelerate(this.delta);
                 this.thrustSound.play();

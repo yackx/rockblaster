@@ -25,14 +25,25 @@ class Ship extends Drawable {
         return Trigonometry.rotateAroundOrigin(new Pair(0, -10), this.spin).add(this.position);
     }
 
-    rotateLeft() {
-        let dr = this.spin - Ship.ROTATION_RATE;
-        if (dr < 0) dr += 2*Math.PI;
+    /**
+     * Rotate left of right
+     *
+     * @param direction `-1` for left, `1` for right
+     */
+    private rotate(direction: 1 | -1) {
+        let dr = this.spin + Ship.ROTATION_RATE * direction;
+        if (dr < 0) {
+            dr += 2 * Math.PI;
+        }
         this.spin = dr % (2*Math.PI);
     }
 
     rotateRight() {
-        this.spin += Ship.ROTATION_RATE % (2*Math.PI);
+        this.rotate(1);
+    }
+
+    rotateLeft() {
+        this.rotate(-1);
     }
 
     setDestroy(destroyed: boolean) {
