@@ -24,8 +24,8 @@ class Game extends Drawable {
     private rocks: Rock[] = [];
 
     private lives: number = Game.NUMBER_OF_LIVES;
-    private score: number = 0;
-    private hiScore: number = 0;
+    private score = 0;
+    private hiScore = 0;
 
     private fireSound: Sound = new Sound('/sounds/fire.wav');
     private thrustSound: Sound = new Sound('/sounds/thrust.wav', true);
@@ -139,7 +139,7 @@ class Game extends Drawable {
 
             // Check if it is safe to respawn, e.g. no rocks in vicinity
             const safeCircle = new Circle(new Pair(this.getWidth() / 2, this.getHeight() / 2), 50);
-            for (let rock of this.rocks) {
+            for (const rock of this.rocks) {
                 const rockCircle = rock.asCircle();
                 if (Collision.circlesOverlap(safeCircle, rockCircle)) {
                     // There are rocks close to the spawning spot. Delay respawn
@@ -214,7 +214,7 @@ class Game extends Drawable {
         }
 
         // Bullets travel
-        for (let bullet of this.bullets) {
+        for (const bullet of this.bullets) {
             if (!bullet.travel(this.delta)) {
                 // Bullet will no longer travel
                 this.deleteBullet(bullet);
@@ -222,13 +222,13 @@ class Game extends Drawable {
         }
 
         // Rocks travel
-        for (let rock of this.rocks) {
+        for (const rock of this.rocks) {
             rock.animate(this.delta);
         }
 
         // Bullet hits rock
-        for (let bullet of this.bullets) {
-            for (let rock of this.rocks) {
+        for (const bullet of this.bullets) {
+            for (const rock of this.rocks) {
                 if (Collision.pointInCircle(bullet.position, rock.asCircle())) {
                     this.deleteBullet(bullet);
                     const exploded = rock.explode();
@@ -255,7 +255,7 @@ class Game extends Drawable {
         // Rock hits ship
         let shipTriangle = undefined;
         const shipCircle = this.ship.asCircle();
-        for (let rock of this.rocks) {
+        for (const rock of this.rocks) {
             const rockCircle = rock.asCircle();
             if (Collision.circlesOverlap(shipCircle, rockCircle)) {
                 // Coarse-grained collision positive.
@@ -297,11 +297,11 @@ class Game extends Drawable {
             this.ship.draw();
         }
 
-        for (let bullet of this.bullets) {
+        for (const bullet of this.bullets) {
             bullet.draw();
         }
 
-        for (let rock of this.rocks) {
+        for (const rock of this.rocks) {
             rock.draw();
         }
     }

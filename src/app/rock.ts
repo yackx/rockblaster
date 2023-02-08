@@ -12,7 +12,7 @@ class Rock extends Drawable {
     private static readonly ROCK_SPIN_FACTORS = [1.0, 2.5, 5.0, 10.0];
 
     private _angle = 0;                         // direction (radians)
-    private spin: number = 0.0;                 // spin (radians per frame)
+    private spin = 0.0;                 // spin (radians per frame)
 
     /**
      * Create a new rock.
