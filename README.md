@@ -6,7 +6,7 @@
 
 ## Install
 
-- This project uses vite.js.
+This project uses vite.js.
 
 ```bash
 $ npm install
