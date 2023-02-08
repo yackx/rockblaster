@@ -1,4 +1,4 @@
-import SoundHelper from './sound-helper';
+import SoundHelper from './sound-helper'
 
 /**
  * Sound player without overlap.
@@ -8,25 +8,25 @@ import SoundHelper from './sound-helper';
  * However, there can be no overlapping playback (eg multiple rocks explosions)
  */
 class Sound {
-    private readonly sound: HTMLAudioElement;
+    private readonly sound: HTMLAudioElement
 
     constructor(readonly src: string, readonly loop = false) {
-        this.sound = SoundHelper.buildSoundElement(src);
-        document.body.appendChild(this.sound);
+        this.sound = SoundHelper.buildSoundElement(src)
+        document.body.appendChild(this.sound)
     }
 
     play() {
         // noinspection JSIgnoredPromiseFromCall
-        this.sound.play();
+        this.sound.play()
     }
 
     stop() {
-        this.sound.pause();
-        this.sound.currentTime = 0;
+        this.sound.pause()
+        this.sound.currentTime = 0
     }
 
     isPlaying(): boolean {
-        return !this.sound.paused;
+        return !this.sound.paused
     }
 }
 
