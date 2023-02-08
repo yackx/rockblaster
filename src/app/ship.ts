@@ -6,7 +6,7 @@ import Circle from "./collision/circle";
 import Settings from "./settings";
 
 class Ship extends Drawable {
-    private static readonly ROTATION_RATE = 0.07;   // in radians per frame
+    private static readonly ROTATION_RATE = 0.005;  // in radians per ms
 
     position: Pair;                                 // center of the ship, at the middle of the A horizontal leg
     spin = 0;                                       // in radians. 0 = heading up
@@ -28,22 +28,23 @@ class Ship extends Drawable {
     /**
      * Rotate left of right
      *
+     * @param delta in ms
      * @param direction `-1` for left, `1` for right
      */
-    private rotate(direction: 1 | -1) {
-        let dr = this.spin + Ship.ROTATION_RATE * direction;
+    private rotate(delta: number, direction: 1 | -1) {
+        let dr = this.spin + delta * Ship.ROTATION_RATE * direction;
         if (dr < 0) {
             dr += 2 * Math.PI;
         }
         this.spin = dr % (2*Math.PI);
     }
 
-    rotateRight() {
-        this.rotate(1);
+    rotateRight(delta: number) {
+        this.rotate(delta, 1);
     }
 
-    rotateLeft() {
-        this.rotate(-1);
+    rotateLeft(delta: number) {
+        this.rotate(delta, -1);
     }
 
     setDestroy(destroyed: boolean) {
