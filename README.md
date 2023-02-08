@@ -26,11 +26,14 @@ Build the project:
 
 `$ vite build`
 
+## Develop
+
+See targets in `package.json` to run linter and make code pretty.
+
 ## Known limitations and issues
 
--   Game only works at the correct speed on **60Hz** screen.
 -   Keyboard required (you cannot play on a tablet)
--   No sound on Safari
+-   Sound is broken on Safari
 
 ## Credits
 
