@@ -4,32 +4,33 @@ class Keyboard {
     // Keys currently key pressed are set to true
     private keysStatus: {[code: string]: boolean} = {}
 
+    private readonly keyDownEventListener: (e: KeyboardEvent) => void
+    private readonly keyUpEventListener: (e: KeyboardEvent) => void
+
     constructor() {
         for (const key in Keyboard.KEYS) {
             this.keysStatus[key] = false
         }
-
-        this.bindKeys()
+        this.keyDownEventListener = this.onKeyDown.bind(this)
+        window.addEventListener('keydown', this.keyDownEventListener)
+        this.keyUpEventListener = this.onKeyUp.bind(this)
+        window.addEventListener('keyup', this.keyUpEventListener)
     }
 
-    private bindKeys() {
-        const thiz = this
-
-        window.addEventListener('keydown', function (e: KeyboardEvent) {
-            if (e.key !== undefined) {
-                if (thiz.recordKeyDown(e.key)) {
-                    e.preventDefault()
-                }
+    private onKeyDown(e: KeyboardEvent) {
+        if (e.key !== undefined) {
+            if (this.recordKeyDown(e.key)) {
+                e.preventDefault()
             }
-        })
+        }
+    }
 
-        window.addEventListener('keyup', function (e: KeyboardEvent) {
-            if (e.key !== undefined) {
-                if (thiz.recordKeyUp(e.key)) {
-                    e.preventDefault()
-                }
+    private onKeyUp(e: KeyboardEvent) {
+        if (e.key !== undefined) {
+            if (this.recordKeyUp(e.key)) {
+                e.preventDefault()
             }
-        })
+        }
     }
 
     isKeyPressed(key: string): boolean {
